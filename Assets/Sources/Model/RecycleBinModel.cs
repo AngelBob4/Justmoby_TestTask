@@ -4,8 +4,8 @@ using DG.Tweening;
 
 public class RecycleBinModel
 {
-    private readonly float _duration = 1f;
-    private readonly Vector3 _rotating = new Vector3(0f, 0f, 360f);
+    private readonly float _duration = 0.5f;
+    private readonly Vector3 _rotating = new Vector3(0f, 0f, 90f);
 
     private Transform _binPosition;
 
@@ -20,12 +20,12 @@ public class RecycleBinModel
         Vector3 topPoint = _binPosition.position + new Vector3(0, 100, 0);
 
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(cubeView.transform.DORotate(_rotating, _duration, RotateMode.LocalAxisAdd))
+        sequence.Append(cubeView.transform.DORotate(_rotating, _duration, RotateMode.Fast))
             .SetEase(Ease.Linear)
             .Join(cubeView.transform.DOMove(topPoint, _duration))
             .SetEase(Ease.Linear);
 
-        sequence.Append(cubeView.transform.DORotate(_rotating, _duration, RotateMode.LocalAxisAdd))
+        sequence.Append(cubeView.transform.DORotate(_rotating, _duration, RotateMode.Fast))
             .SetEase(Ease.Linear)
             .Join(cubeView.transform.DOMove(_binPosition.position, _duration))
             .SetEase(Ease.Linear)

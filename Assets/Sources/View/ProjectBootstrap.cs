@@ -11,6 +11,7 @@ public class ProjectBootstrap : MonoBehaviour
     [SerializeField] private Transform _canvas;
     [SerializeField] private CubesConfig _cubesConfig;
     [SerializeField] private Transform _cubesContainer;
+    [SerializeField] private Transform _towerContainer;
     [SerializeField] private List<Image> _storageImages;
 
     [Header("Zone views")]
@@ -32,7 +33,7 @@ public class ProjectBootstrap : MonoBehaviour
         RecycleBinModel recycleBinModel)
     {
         cubesGenerator.Init(_cubesContainer, _canvas);
-        _towerManagerPresenter = new TowerManagerPresenter(_towerZoneView, towerManager, idleZoneModel);
+        _towerManagerPresenter = new TowerManagerPresenter(_towerZoneView, towerManager, idleZoneModel, _towerContainer);
         _idleZonePresenter = new IdleZonePresenter(_idleZoneView, idleZoneModel);
         _recycleBinPresenter = new RecycleBinPresenter(recycleBinModel, _recycleBinZoneView);
         _cubesStorage = new CubesStorage(cubesGenerator, _cubesConfig, _storageImages);
