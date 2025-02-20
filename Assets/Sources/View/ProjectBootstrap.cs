@@ -36,7 +36,7 @@ public class ProjectBootstrap : MonoBehaviour
         _towerManagerPresenter = new TowerManagerPresenter(_towerZoneView, towerManager, idleZoneModel, _towerContainer);
         _idleZonePresenter = new IdleZonePresenter(_idleZoneView, idleZoneModel);
         _recycleBinPresenter = new RecycleBinPresenter(recycleBinModel, _recycleBinZoneView);
-        _cubesStorage = new CubesStorage(cubesGenerator, _cubesConfig, _storageImages);
+        _cubesStorage = new CubesStorage(cubesGenerator, _cubesConfig, _storageImages, towerManager);
     }
 
     private void Awake()

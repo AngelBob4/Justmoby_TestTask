@@ -38,6 +38,9 @@ namespace Cubes.View
         {
             OnEndDraging?.Invoke(this);
             _canvasGroup.alpha = 1f;
+
+            if (EventSystem.current.IsPointerOverGameObject() == false)
+                Destroy(gameObject);
         }
 
         public void TurnOffRaycasts()

@@ -10,9 +10,15 @@ namespace Cubes.Model
         private List<Image> _storageCubesImages = new List<Image>();
         private List<Image> _storageImages = new List<Image>();
         private CubesGenerator _cubesGenerator;
+        private TowerManager _towerManager;
 
-        public CubesStorage(CubesGenerator cubesGenerator, CubesConfig config, List<Image> storageImages)
+        public CubesStorage(
+            CubesGenerator cubesGenerator, 
+            CubesConfig config, 
+            List<Image> storageImages,
+            TowerManager towerManager)
         {
+            _towerManager = towerManager;
             _cubesGenerator = cubesGenerator;
             _storageImages = storageImages;
 
@@ -53,6 +59,8 @@ namespace Cubes.Model
             {
                 image.raycastTarget = false;
             }
+
+            _towerManager.TurnOffCubesRaycasts();
         }
 
         private void OnCubeEndedDraging(CubeView cube)
@@ -68,6 +76,8 @@ namespace Cubes.Model
             {
                 image.raycastTarget = true;
             }
+
+            _towerManager.TurnOnCubesRaycasts();
         }
     }
 }

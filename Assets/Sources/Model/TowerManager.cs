@@ -44,6 +44,18 @@ namespace Cubes.Model
             }
         }
 
+        public void TurnOffCubesRaycasts()
+        {
+            foreach (CubeView cube in _cubeViews)
+                cube.TurnOffRaycasts();
+        }
+
+        public void TurnOnCubesRaycasts()
+        {
+            foreach (CubeView cube in _cubeViews)
+                cube.TurnOnRaycasts();
+        }
+
         private void ResetTowerZone()
         {
             Vector2 newColliderSizes = new Vector2(
@@ -73,9 +85,15 @@ namespace Cubes.Model
             sequence.Append(cubeView.transform.DOLocalMove(topPoint + endValue, _startMovingDuration))
                 .SetEase(Ease.OutSine);
             sequence.Append(cubeView.transform.DOLocalMove(endValue, _endMovingDuration))
-                .SetEase(Ease.InSine);
+                .SetEase(Ease.InSine)
+                .OnComplete(() => EndConnectionToTower(cubeView));
 
             sequence.Play();
+        }
+
+        private void EndConnectionToTower(CubeView cubeView)
+        {
+            cubeView.TurnOnRaycasts();
         }
     }
 }
