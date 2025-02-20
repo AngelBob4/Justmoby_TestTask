@@ -1,4 +1,3 @@
-using Reflex.Attributes;
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,6 +13,8 @@ namespace Cubes.View
         public event Action<CubeView> OnBeginDraging;
         public event Action<CubeView> OnEndDraging;
 
+        public bool IsInTower { get; private set; }
+
         public void Init(Transform canvas)
         {
             _canvas = canvas;
@@ -24,6 +25,7 @@ namespace Cubes.View
         {
             OnBeginDraging?.Invoke(this);
 
+            IsInTower = false;
             _canvasGroup.blocksRaycasts = false;
             _canvasGroup.alpha = 0.6f;
             transform.SetParent(_canvas);
@@ -43,6 +45,11 @@ namespace Cubes.View
                 Destroy(gameObject);
         }
 
+        private void OnDestroy()
+        {
+            OnEndDraging?.Invoke(this);
+        }
+
         public void TurnOffRaycasts()
         {
             _canvasGroup.blocksRaycasts = false;
@@ -51,6 +58,11 @@ namespace Cubes.View
         public void TurnOnRaycasts()
         {
             _canvasGroup.blocksRaycasts = true;
+        }
+
+        public void SetTower()
+        {
+            IsInTower = true;
         }
     }
 }

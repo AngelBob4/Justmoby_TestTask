@@ -12,6 +12,8 @@ namespace Cubes.Model
         private CubesGenerator _cubesGenerator;
         private TowerManager _towerManager;
 
+        public bool IsReplacingCube { get; private set; } = false;
+
         public CubesStorage(
             CubesGenerator cubesGenerator, 
             CubesConfig config, 
@@ -37,6 +39,7 @@ namespace Cubes.Model
         private void OnCubeBeginDraging(CubeView oldCube)
         {
             CubeView newCube = _cubesGenerator.GenerateCube(oldCube);
+            IsReplacingCube = true;
 
             if (newCube == null)
                 return;
@@ -65,6 +68,7 @@ namespace Cubes.Model
 
         private void OnCubeEndedDraging(CubeView cube)
         {
+            IsReplacingCube = false;
             cube.OnEndDraging -= OnCubeEndedDraging;
 
             foreach (Image image in _storageImages)

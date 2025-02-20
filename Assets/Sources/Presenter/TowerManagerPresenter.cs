@@ -15,13 +15,14 @@ namespace Cubes.Presenter
             TowerZoneView towerZoneView, 
             TowerManager towerManager, 
             IdleZoneModel idleZoneModel,
-            Transform towerContainer)
+            Transform towerContainer,
+            CubesStorage cubesStorage)
         {
             _towerZoneView = towerZoneView;
             _towerManager = towerManager;
 
             if (_towerManager != null)
-                _towerManager.Init(_towerZoneView, idleZoneModel, towerContainer);
+                _towerManager.Init(_towerZoneView, idleZoneModel, towerContainer, cubesStorage);
         }
 
         public void Enable()

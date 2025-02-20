@@ -1186,7 +1186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1510,6 +1510,7 @@ MonoBehaviour:
   _canvas: {fileID: 1925020346}
   _cubesConfig: {fileID: 11400000, guid: 44e603b4d00398c4ab3d6171637e72b7, type: 2}
   _cubesContainer: {fileID: 1898160511}
+  _towerContainer: {fileID: 622380339}
   _storageImages:
   - {fileID: 532281426}
   - {fileID: 2074130691}

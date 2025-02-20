@@ -17,11 +17,17 @@ namespace Cubes.Model
         private RectTransform _towerZoneViewRectTransform;
         private Transform _towerContainer;
         private IdleZoneModel _idleZoneModel;
+        private CubesStorage _cubesStorage;
         private Transform _startPosition;
         private List<CubeView> _cubeViews = new List<CubeView>();
 
-        public void Init(TowerZoneView towerZoneView, IdleZoneModel idleZoneModel, Transform towerContainer)
+        public void Init(
+            TowerZoneView towerZoneView, 
+            IdleZoneModel idleZoneModel, 
+            Transform towerContainer,
+            CubesStorage cubesStorage)
         {
+            _cubesStorage = cubesStorage;
             _towerContainer = towerContainer;
             _idleZoneModel = idleZoneModel;
             _startPosition = towerZoneView.StartPosition;
@@ -34,9 +40,11 @@ namespace Cubes.Model
         {
             if (_cubeViews.Count < _maxCubesAmount)
             {
+                cubeView.SetTower();
                 _cubeViews.Add(cubeView);
                 MoveCubeToTower(cubeView);
                 ResetTowerZone();
+                cubeView.OnEndDraging += DeleteCubeFromTower;
             }
             else
             {
@@ -52,8 +60,37 @@ namespace Cubes.Model
 
         public void TurnOnCubesRaycasts()
         {
+            if (_cubesStorage.IsReplacingCube)
+                return;
+
             foreach (CubeView cube in _cubeViews)
                 cube.TurnOnRaycasts();
+        }
+
+        private void DeleteCubeFromTower(CubeView cubeView)
+        {
+            if (cubeView.IsInTower)
+                return;
+
+            int cubeIndex = _cubeViews.IndexOf(cubeView);
+            _cubeViews.Remove(cubeView);
+            cubeView.OnEndDraging -= DeleteCubeFromTower;
+            ResetCubesInTower(cubeIndex);
+        }
+
+        private void ResetCubesInTower(int index)
+        {
+            TurnOffCubesRaycasts();
+
+            for (int i = 0; i < _cubeViews.Count; i++)
+            {
+                if (i >= index)
+                {
+                    MoveCubeToTower(_cubeViews[i]);
+                }
+            }
+
+            TurnOnCubesRaycasts();
         }
 
         private void ResetTowerZone()
@@ -70,10 +107,12 @@ namespace Cubes.Model
         private void MoveCubeToTower(CubeView cubeView)
         {
             cubeView.transform.SetParent(_towerContainer);
+            cubeView.TurnOffRaycasts();
 
             Vector3 endValue = new Vector3(
                 _startPosition.localPosition.x,
-                (_cubeViews.Count - 1) * Constants.CubeWidth,
+                //(_cubeViews.Count - 1) * Constants.CubeWidth,
+                (_cubeViews.IndexOf(cubeView)) * Constants.CubeWidth,
                 _startPosition.localPosition.z);
             Vector3 topPoint = new Vector3(0, 100f, 0);
             Vector3 rotation = new Vector3(0, 0, 90f);
@@ -86,14 +125,9 @@ namespace Cubes.Model
                 .SetEase(Ease.OutSine);
             sequence.Append(cubeView.transform.DOLocalMove(endValue, _endMovingDuration))
                 .SetEase(Ease.InSine)
-                .OnComplete(() => EndConnectionToTower(cubeView));
+                .OnComplete(() => TurnOnCubesRaycasts());
 
             sequence.Play();
-        }
-
-        private void EndConnectionToTower(CubeView cubeView)
-        {
-            cubeView.TurnOnRaycasts();
         }
     }
 }

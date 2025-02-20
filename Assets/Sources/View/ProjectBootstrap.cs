@@ -33,10 +33,15 @@ public class ProjectBootstrap : MonoBehaviour
         RecycleBinModel recycleBinModel)
     {
         cubesGenerator.Init(_cubesContainer, _canvas);
-        _towerManagerPresenter = new TowerManagerPresenter(_towerZoneView, towerManager, idleZoneModel, _towerContainer);
+        _cubesStorage = new CubesStorage(cubesGenerator, _cubesConfig, _storageImages, towerManager);
+        _towerManagerPresenter = new TowerManagerPresenter(
+            _towerZoneView, 
+            towerManager, 
+            idleZoneModel, 
+            _towerContainer,
+            _cubesStorage);
         _idleZonePresenter = new IdleZonePresenter(_idleZoneView, idleZoneModel);
         _recycleBinPresenter = new RecycleBinPresenter(recycleBinModel, _recycleBinZoneView);
-        _cubesStorage = new CubesStorage(cubesGenerator, _cubesConfig, _storageImages, towerManager);
     }
 
     private void Awake()
