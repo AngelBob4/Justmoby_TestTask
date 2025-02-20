@@ -9,7 +9,8 @@ namespace Cubes.Model
     public class TowerManager
     {
         private readonly int _maxCubesAmount = 5;
-        private readonly int _moveDuration = 2;
+        private readonly float _startMovingDuration = 0.6f;
+        private readonly float _endMovingDuration = 0.4f;
         private readonly int _widthTowerZone = 100;
         private readonly int _heightTowerZone = 100;
 
@@ -60,10 +61,21 @@ namespace Cubes.Model
 
             Vector3 endValue = new Vector3(
                 _startPosition.localPosition.x,
-                _startPosition.localPosition.y + (_cubeViews.Count - 1) * Constants.CubeWidth,
+                (_cubeViews.Count - 1) * Constants.CubeWidth,
                 _startPosition.localPosition.z);
+            Vector3 topPoint = new Vector3(0, 100f, 0);
+            Vector3 rotation = new Vector3(0, 0, 90f);
 
-            cubeView.transform.DOLocalMove(endValue, _moveDuration);
+            cubeView.transform.DORotate(rotation, _startMovingDuration + _endMovingDuration);
+
+            Sequence sequence = DOTween.Sequence();
+
+            sequence.Append(cubeView.transform.DOLocalMove(topPoint + endValue, _startMovingDuration))
+                .SetEase(Ease.OutSine);
+            sequence.Append(cubeView.transform.DOLocalMove(endValue, _endMovingDuration))
+                .SetEase(Ease.InSine);
+
+            sequence.Play();
         }
     }
 }
