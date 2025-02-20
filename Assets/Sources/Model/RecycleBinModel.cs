@@ -2,22 +2,44 @@ using Cubes.View;
 using UnityEngine;
 using DG.Tweening;
 
-public class RecycleBinModel : MonoBehaviour
+public class RecycleBinModel
 {
-    private readonly float _duration = 2f;
-    private readonly Vector3 rotating = new Vector3(0, 0, 180);
+    private readonly float _duration = 1f;
+    private readonly Vector3 _rotating = new Vector3(0f, 0f, 360f);
 
-    private Transform _endPosition;
+    private Transform _binPosition;
 
     public void Init(Transform endPosition)
     {
-        _endPosition = endPosition;
+        _binPosition = endPosition;
     }
 
     public void DestroyCube(CubeView cubeView)
     {
         cubeView.TurnOffRaycasts();
-        cubeView.transform.DORotate(rotating, _duration);
-        cubeView.transform.DOScale(Vector3.zero, _duration).OnComplete(() => Object.Destroy(cubeView.gameObject));
+        Vector3 topPoint = _binPosition.position + new Vector3(0, 100, 0);
+
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(cubeView.transform.DORotate(_rotating, _duration, RotateMode.LocalAxisAdd))
+            .SetEase(Ease.Linear)
+            .Join(cubeView.transform.DOMove(topPoint, _duration))
+            .SetEase(Ease.Linear);
+
+        sequence.Append(cubeView.transform.DORotate(_rotating, _duration, RotateMode.LocalAxisAdd))
+            .SetEase(Ease.Linear)
+            .Join(cubeView.transform.DOMove(_binPosition.position, _duration))
+            .SetEase(Ease.Linear)
+            .OnComplete(() => StartDeletingCube(cubeView));
+
+        sequence.Play();
+    }
+
+    private void StartDeletingCube(CubeView cubeView)
+    {
+        Vector3 bottomPoint = _binPosition.position - new Vector3(0, 100, 0);
+
+        cubeView.transform.SetParent(_binPosition);
+        cubeView.transform.DOMove(bottomPoint, _duration)
+            .OnComplete(() => Object.Destroy(cubeView.gameObject));
     }
 }
