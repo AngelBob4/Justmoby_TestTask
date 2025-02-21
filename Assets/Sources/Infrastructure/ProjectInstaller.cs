@@ -13,5 +13,6 @@ public class ProjectInstaller : MonoBehaviour, IInstaller
         containerBuilder.AddSingleton(new DropZonesManager());
         containerBuilder.AddSingleton(new CubesStorage());
         containerBuilder.AddSingleton(new ConsoleModel());
+        containerBuilder.AddSingleton(new GameStorage());
     }
 }

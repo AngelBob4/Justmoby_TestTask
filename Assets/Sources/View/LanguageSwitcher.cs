@@ -16,6 +16,7 @@ public class LanguageSwitcher : MonoBehaviour
         float buttonWidth = 200f;
         float buttonHeight = 50f;
 
+        /*
         if (GUI.Button(new Rect(10, 10, buttonWidth, buttonHeight), "Switch to Russian"))
         {
             LeanLocalization.SetCurrentLanguageAll(RussianCode);
@@ -25,5 +26,6 @@ public class LanguageSwitcher : MonoBehaviour
         {
             LeanLocalization.SetCurrentLanguageAll(EnglishCode);
         }
+        */
     }
 }

@@ -13,13 +13,31 @@ public class ProjectBootstrap : MonoBehaviour
     [SerializeField] private Transform _towerContainer;
     [SerializeField] private List<Image> _storageImages;
 
+    private CubesGenerator _cubesGenerator;
+    private CubesStorage _cubesStorage;
+    private DropZonesManager _dropZonesManager;
+    private GameStorage _gameStorage;
+    private TowerManager _towerManager;
+
     [Inject]
     private void Inject(
         CubesGenerator cubesGenerator,
         CubesStorage cubesStorage,
-        DropZonesManager dropZonesManager)
+        DropZonesManager dropZonesManager,
+        GameStorage gameStorage,
+        TowerManager towerManager)
     {
-        cubesGenerator.Init(_cubesContainer, _canvas, dropZonesManager);
-        cubesStorage.Init(cubesGenerator, _cubesConfig, _storageImages, dropZonesManager);
+        _cubesGenerator = cubesGenerator;
+        _cubesStorage = cubesStorage;
+        _dropZonesManager = dropZonesManager;
+        _gameStorage = gameStorage;
+        _towerManager = towerManager;
+    }
+
+    private void Awake()
+    {
+        _cubesGenerator.Init(_cubesContainer, _canvas, _dropZonesManager, _cubesConfig);
+        _cubesStorage.Init(_cubesGenerator, _cubesConfig, _storageImages, _dropZonesManager);
+        _gameStorage.Init(_cubesGenerator, _towerManager);
     }
 }

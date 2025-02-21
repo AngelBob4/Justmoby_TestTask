@@ -24,7 +24,7 @@ namespace Cubes.Model
             _cubesGenerator = cubesGenerator;
             _storageImages = storageImages;
 
-            _storage = _cubesGenerator.GenerateListOfCubes(config);
+            _storage = _cubesGenerator.GenerateListOfCubes();
 
             foreach (CubeView cube in _storage)
             {

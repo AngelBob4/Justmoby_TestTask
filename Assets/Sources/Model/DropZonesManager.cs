@@ -1,8 +1,7 @@
 using Cubes.View;
 using System;
-using UnityEngine;
 
-public class DropZonesManager : MonoBehaviour
+public class DropZonesManager
 {
     public event Action<CubeView> CubeIsTaken;
     public event Action<CubeView> CubeIsDroped;

@@ -25,7 +25,8 @@ public class DropZonesBootstrap : MonoBehaviour
         RecycleBinModel recycleBinModel,
         CubesStorage cubesStorage,
         DropZonesManager dropZonesManager,
-        ConsoleModel consoleModel)
+        ConsoleModel consoleModel,
+        GameStorage gameStorage)
     {
         _towerManagerPresenter = new TowerManagerPresenter(_towerZoneView, towerManager);
         _idleZonePresenter = new IdleZonePresenter(_idleZoneView, idleZoneModel);
@@ -33,7 +34,7 @@ public class DropZonesBootstrap : MonoBehaviour
 
         recycleBinModel.Init(_recycleBinZoneView.EndPosition, consoleModel);
         idleZoneModel.Init(consoleModel);
-        towerManager.Init(_towerZoneView, idleZoneModel, _towerContainer, dropZonesManager, _towerZonePanel, consoleModel);
+        towerManager.Init(_towerZoneView, idleZoneModel, _towerContainer, dropZonesManager, _towerZonePanel, consoleModel, gameStorage);
     }
 
     private void Awake()

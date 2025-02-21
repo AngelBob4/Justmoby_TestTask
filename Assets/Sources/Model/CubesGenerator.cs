@@ -9,22 +9,24 @@ public class CubesGenerator
     private Transform _container;
     private Transform _canvas;
     private DropZonesManager _dropZonesManager;
+    private CubesConfig _config;
 
-    public void Init(Transform container, Transform canvas, DropZonesManager dropZonesManager)
+    public void Init(Transform container, Transform canvas, DropZonesManager dropZonesManager, CubesConfig config)
     {
+        _config = config;
         _dropZonesManager = dropZonesManager;
         _container = container;
         _canvas = canvas;
     }
 
-    public List<CubeView> GenerateListOfCubes(CubesConfig config)
+    public List<CubeView> GenerateListOfCubes()
     {
         if (_canvas == null && _container == null)
             return null;
 
         List<CubeView> generatedCubes = new List<CubeView>();
-        int cubesAmount = config.Amount;
-        CubeView template = config.CubeTemplate;
+        int cubesAmount = _config.Amount;
+        CubeView template = _config.CubeTemplate;
 
         for (int i = 0; i < cubesAmount; i++)
         {
@@ -68,6 +70,31 @@ public class CubesGenerator
         }
 
         newCube.transform.SetSiblingIndex(index);
+        _dropZonesManager.GetNewCube(newCube);
+
+        return newCube;
+    }
+
+    public CubeView ReloadCube(CubeData cubeData)
+    {
+        Vector3 position = cubeData.LocalPosition;
+        Color color = cubeData.Color;
+        Transform parentTransform = cubeData.ParentTransform;
+        Vector3 rotation = cubeData.Rotation;
+
+        if (_canvas == null && _container == null)
+            return null;
+
+        CubeView newCube = Object.Instantiate(_config.CubeTemplate);
+
+        newCube.transform.SetParent(parentTransform);
+        newCube.transform.localPosition = position;
+        newCube.transform.rotation = Quaternion.EulerAngles(rotation);
+
+        if (newCube.TryGetComponent(out Image image))
+            image.color = color;
+
+        newCube.Init(_canvas);
         _dropZonesManager.GetNewCube(newCube);
 
         return newCube;

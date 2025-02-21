@@ -22,6 +22,7 @@ namespace Cubes.Model
         private Transform _startPosition;
         private List<CubeView> _cubeViews = new List<CubeView>();
         private ConsoleModel _consoleModel;
+        private GameStorage _gameStorage;
 
         public void Init(
             TowerZoneView towerZoneView, 
@@ -29,8 +30,10 @@ namespace Cubes.Model
             Transform towerContainer,
             DropZonesManager dropZonesManager,
             RectTransform towerZonePanel,
-            ConsoleModel consoleModel)
+            ConsoleModel consoleModel,
+            GameStorage gameStorage)
         {
+            _gameStorage = gameStorage;
             _consoleModel = consoleModel;
             _maxCubesAmount = (int)(towerZonePanel.sizeDelta.y / Constants.CubeWidth);
             _dropZonesManager = dropZonesManager;
@@ -82,6 +85,13 @@ namespace Cubes.Model
                 cube.TurnOnRaycasts();
         }
 
+        public void ReloadCube(CubeView cube)
+        {
+            cube.SetTower();
+            _cubeViews.Add(cube);
+            ResetTowerZone();
+        }
+
         private void DeleteCubeFromTower(CubeView cubeView)
         {
             if (cubeView == null || cubeView.IsInTower == false)
@@ -90,6 +100,9 @@ namespace Cubes.Model
             int cubeIndex = _cubeViews.IndexOf(cubeView);
             _cubeViews.Remove(cubeView);
             ResetCubesInTower(cubeIndex);
+
+            if (cubeIndex == _cubeViews.Count)
+                _gameStorage.SaveCubes(_cubeViews, _towerContainer);
         }
 
         private void ResetCubesInTower(int index)
@@ -137,9 +150,15 @@ namespace Cubes.Model
                 .SetEase(Ease.OutSine);
             sequence.Append(cubeView.transform.DOLocalMove(endValue, _endMovingDuration))
                 .SetEase(Ease.InSine)
-                .OnComplete(() => _dropZonesManager.EndBuildingCube());
+                .OnComplete(EndBuildingCube);
 
             sequence.Play();
+        }
+
+        private void EndBuildingCube()
+        {
+            _dropZonesManager.EndBuildingCube();
+            _gameStorage.SaveCubes(_cubeViews, _towerContainer);
         }
     }
 }
