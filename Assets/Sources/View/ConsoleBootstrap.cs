@@ -3,13 +3,16 @@ using UnityEngine;
 using Cubes.Model;
 using UnityEngine.UI;
 
-public class ConsoleBootstrap : MonoBehaviour
+namespace Cubes.View
 {
-    [SerializeField] private Text _consoleTextBox;
-
-    [Inject]
-    private void Inject(ConsoleModel consoleModel)
+    public class ConsoleBootstrap : MonoBehaviour
     {
-        consoleModel.Init(_consoleTextBox);
+        [SerializeField] private Text _consoleTextBox;
+
+        [Inject]
+        private void Inject(ConsoleModel consoleModel)
+        {
+            consoleModel.Init(_consoleTextBox);
+        }
     }
 }

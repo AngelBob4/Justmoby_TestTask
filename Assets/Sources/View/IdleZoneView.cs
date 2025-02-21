@@ -1,5 +1,8 @@
 using Cubes.Infrastructure;
 
-public class IdleZoneView : DropZone
+namespace Cubes.View
 {
+    public class IdleZoneView : DropZone
+    {
+    }
 }

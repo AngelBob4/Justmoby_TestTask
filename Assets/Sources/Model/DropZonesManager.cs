@@ -1,54 +1,57 @@
 using Cubes.View;
 using System;
 
-public class DropZonesManager
+namespace Cubes.Model
 {
-    public event Action<CubeView> CubeIsTaken;
-    public event Action<CubeView> CubeIsDroped;
-
-    private bool _towerIsBuilding = false;
-    private bool _isCubeTaken = false;
-
-    public void TakeCube(CubeView cubeView)
+    public class DropZonesManager
     {
-        _isCubeTaken = true;
-        CubeIsTaken?.Invoke(cubeView);
-    }
+        public event Action<CubeView> CubeIsTaken;
+        public event Action<CubeView> CubeIsDroped;
 
-    public void DropCube(CubeView cubeView)
-    {
-        _isCubeTaken = false;
+        private bool _towerIsBuilding = false;
+        private bool _isCubeTaken = false;
 
-        if (_towerIsBuilding)
-            return;
+        public void TakeCube(CubeView cubeView)
+        {
+            _isCubeTaken = true;
+            CubeIsTaken?.Invoke(cubeView);
+        }
 
-        CubeIsDroped?.Invoke(cubeView);
-    }
+        public void DropCube(CubeView cubeView)
+        {
+            _isCubeTaken = false;
 
-    public void StartBuildingCube()
-    {
-        _towerIsBuilding = true;
-    }
+            if (_towerIsBuilding)
+                return;
 
-    public void EndBuildingCube()
-    {
-        _towerIsBuilding = false;
+            CubeIsDroped?.Invoke(cubeView);
+        }
 
-        if(_isCubeTaken == false)
-            CubeIsDroped?.Invoke(null);
-    }
+        public void StartBuildingCube()
+        {
+            _towerIsBuilding = true;
+        }
 
-    public void GetNewCube(CubeView cubeView)
-    {
-        cubeView.OnBeginDraging += TakeCube;
-        cubeView.OnEndDraging += DropCube;
-        cubeView.OnCubeDestroy += OnCubeDestroy;
-    }
+        public void EndBuildingCube()
+        {
+            _towerIsBuilding = false;
 
-    public void OnCubeDestroy(CubeView cubeView)
-    {
-        cubeView.OnBeginDraging -= TakeCube;
-        cubeView.OnEndDraging -= DropCube;
-        cubeView.OnCubeDestroy -= OnCubeDestroy;
+            if (_isCubeTaken == false)
+                CubeIsDroped?.Invoke(null);
+        }
+
+        public void GetNewCube(CubeView cubeView)
+        {
+            cubeView.OnBeginDraging += TakeCube;
+            cubeView.OnEndDraging += DropCube;
+            cubeView.OnCubeDestroy += OnCubeDestroy;
+        }
+
+        public void OnCubeDestroy(CubeView cubeView)
+        {
+            cubeView.OnBeginDraging -= TakeCube;
+            cubeView.OnEndDraging -= DropCube;
+            cubeView.OnCubeDestroy -= OnCubeDestroy;
+        }
     }
 }

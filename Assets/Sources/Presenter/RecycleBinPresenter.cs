@@ -1,4 +1,5 @@
 using Cubes.Infrastructure;
+using Cubes.Model;
 using Cubes.View;
 
 namespace Cubes.Presenter

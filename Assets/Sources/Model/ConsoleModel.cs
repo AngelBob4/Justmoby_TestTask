@@ -1,26 +1,29 @@
 using Lean.Localization;
 using UnityEngine.UI;
 
-public class ConsoleModel
+namespace Cubes.Model
 {
-    private Text _consoleTextBox;
-
-    public void Init(Text consoleTextBox)
+    public class ConsoleModel
     {
-        _consoleTextBox = consoleTextBox;
+        private Text _consoleTextBox;
+
+        public void Init(Text consoleTextBox)
+        {
+            _consoleTextBox = consoleTextBox;
+        }
+
+        public void WriteToConsole(TypeOfText typeOfText)
+        {
+            LeanTranslation translation = LeanLocalization.CurrentTranslations[typeOfText.ToString()];
+            _consoleTextBox.text = translation.Data.ToString();
+        }
     }
 
-    public void WriteToConsole(TypeOfText typeOfText)
+    public enum TypeOfText
     {
-        LeanTranslation translation = LeanLocalization.CurrentTranslations[typeOfText.ToString()];
-        _consoleTextBox.text = translation.Data.ToString();
+        CubeInstallation,
+        CubeThrowing,
+        CubeDisappearing,
+        HeightLimit,
     }
-}
-
-public enum TypeOfText
-{
-    CubeInstallation,
-    CubeThrowing,
-    CubeDisappearing,
-    HeightLimit,
 }
