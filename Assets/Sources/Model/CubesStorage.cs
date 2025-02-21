@@ -10,17 +10,17 @@ namespace Cubes.Model
         private List<Image> _storageCubesImages = new List<Image>();
         private List<Image> _storageImages = new List<Image>();
         private CubesGenerator _cubesGenerator;
-        private TowerManager _towerManager;
+        private DropZonesManager _dropZonesManager;
 
         public bool IsReplacingCube { get; private set; } = false;
 
-        public CubesStorage(
+        public void Init(
             CubesGenerator cubesGenerator, 
             CubesConfig config, 
             List<Image> storageImages,
-            TowerManager towerManager)
+            DropZonesManager dropZonesManager)
         {
-            _towerManager = towerManager;
+            _dropZonesManager = dropZonesManager;
             _cubesGenerator = cubesGenerator;
             _storageImages = storageImages;
 
@@ -29,59 +29,44 @@ namespace Cubes.Model
             foreach (CubeView cube in _storage)
             {
                 cube.OnBeginDraging += OnCubeBeginDraging;
-                cube.OnEndDraging += OnCubeEndedDraging;
-
-                if (cube.TryGetComponent(out Image image))
-                    _storageCubesImages.Add(image);
             }
+
+            _dropZonesManager.CubeIsTaken += TurnOffStorage;
+            _dropZonesManager.CubeIsDroped += TurnOnStorage;
+        }
+
+        ~CubesStorage()
+        {
+            _dropZonesManager.CubeIsTaken -= TurnOffStorage;
+            _dropZonesManager.CubeIsDroped -= TurnOnStorage;
+        }
+
+        public void TurnOnStorage(CubeView _)
+        {
+            foreach (Image image in _storageImages)
+                image.raycastTarget = true;
+
+            foreach (CubeView cubeView in _storage)
+                cubeView.TurnOnRaycasts();
+        }
+
+        public void TurnOffStorage(CubeView _)
+        {
+            foreach (Image image in _storageImages)
+                image.raycastTarget = false;
+
+            foreach (CubeView cubeView in _storage)
+                cubeView.TurnOffRaycasts();
         }
 
         private void OnCubeBeginDraging(CubeView oldCube)
         {
             CubeView newCube = _cubesGenerator.GenerateCube(oldCube);
-            IsReplacingCube = true;
-
-            if (newCube == null)
-                return;
+            _storage.Add(newCube);
+            _storage.Remove(oldCube);
 
             oldCube.OnBeginDraging -= OnCubeBeginDraging;
             newCube.OnBeginDraging += OnCubeBeginDraging;
-            newCube.OnEndDraging += OnCubeEndedDraging;
-
-            oldCube.TryGetComponent(out Image oldImage);
-            newCube.TryGetComponent(out Image newImage);
-            _storageCubesImages.Remove(oldImage);
-            _storageCubesImages.Add(newImage);
-
-            foreach (Image image in _storageImages)
-            {
-                image.raycastTarget = false;
-            }
-
-            foreach (Image image in _storageCubesImages)
-            {
-                image.raycastTarget = false;
-            }
-
-            _towerManager.TurnOffCubesRaycasts();
-        }
-
-        private void OnCubeEndedDraging(CubeView cube)
-        {
-            IsReplacingCube = false;
-            cube.OnEndDraging -= OnCubeEndedDraging;
-
-            foreach (Image image in _storageImages)
-            {
-                image.raycastTarget = true;
-            }
-
-            foreach (Image image in _storageCubesImages)
-            {
-                image.raycastTarget = true;
-            }
-
-            _towerManager.TurnOnCubesRaycasts();
         }
     }
 }

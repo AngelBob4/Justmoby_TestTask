@@ -8,9 +8,11 @@ public class CubesGenerator
 {
     private Transform _container;
     private Transform _canvas;
+    private DropZonesManager _dropZonesManager;
 
-    public void Init(Transform container, Transform canvas)
+    public void Init(Transform container, Transform canvas, DropZonesManager dropZonesManager)
     {
+        _dropZonesManager = dropZonesManager;
         _container = container;
         _canvas = canvas;
     }
@@ -42,6 +44,7 @@ public class CubesGenerator
             }
 
             generatedCubes.Add(newCube);
+            _dropZonesManager.GetNewCube(newCube);
         }
 
         return generatedCubes;
@@ -65,6 +68,7 @@ public class CubesGenerator
         }
 
         newCube.transform.SetSiblingIndex(index);
+        _dropZonesManager.GetNewCube(newCube);
 
         return newCube;
     }

@@ -1,8 +1,6 @@
 using Cubes.Infrastructure;
 using Cubes.Model;
 using Cubes.View;
-using Reflex.Attributes;
-using UnityEngine;
 
 namespace Cubes.Presenter
 {
@@ -11,18 +9,10 @@ namespace Cubes.Presenter
         private TowerManager _towerManager;
         private TowerZoneView _towerZoneView;
 
-        public TowerManagerPresenter(
-            TowerZoneView towerZoneView, 
-            TowerManager towerManager, 
-            IdleZoneModel idleZoneModel,
-            Transform towerContainer,
-            CubesStorage cubesStorage)
+        public TowerManagerPresenter(TowerZoneView towerZoneView, TowerManager towerManager)
         {
             _towerZoneView = towerZoneView;
             _towerManager = towerManager;
-
-            if (_towerManager != null)
-                _towerManager.Init(_towerZoneView, idleZoneModel, towerContainer, cubesStorage);
         }
 
         public void Enable()

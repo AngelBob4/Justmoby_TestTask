@@ -10,8 +10,16 @@ namespace Cubes.Model
         private readonly float _duration = 0.5f;
         private readonly Vector3 rotating = new Vector3(0, 0, 180);
 
+        private ConsoleModel _consoleModel;
+
+        public void Init(ConsoleModel consoleModel)
+        {
+            _consoleModel = consoleModel;
+        }
+
         public void DestroyCube(CubeView cubeView)
         {
+            _consoleModel.WriteToConsole(TypeOfText.CubeDisappearing);
             Vector3 endScale = Vector3.one * 2;
 
             if (cubeView.TryGetComponent(out Image image))

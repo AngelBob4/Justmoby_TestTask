@@ -10,5 +10,8 @@ public class ProjectInstaller : MonoBehaviour, IInstaller
         containerBuilder.AddSingleton(new TowerManager());
         containerBuilder.AddSingleton(new CubesGenerator());
         containerBuilder.AddSingleton(new RecycleBinModel());
+        containerBuilder.AddSingleton(new DropZonesManager());
+        containerBuilder.AddSingleton(new CubesStorage());
+        containerBuilder.AddSingleton(new ConsoleModel());
     }
 }

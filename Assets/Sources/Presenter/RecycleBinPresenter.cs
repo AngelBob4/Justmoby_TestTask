@@ -12,9 +12,6 @@ namespace Cubes.Presenter
         {
             _recycleBinModel = recycleBinModel;
             _recycleBinZoneView = recycleBinZoneView;
-
-            if (_recycleBinModel != null)
-                _recycleBinModel.Init(_recycleBinZoneView.EndPosition);
         }
 
         public void Enable()

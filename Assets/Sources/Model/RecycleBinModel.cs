@@ -8,14 +8,17 @@ public class RecycleBinModel
     private readonly Vector3 _rotating = new Vector3(0f, 0f, 90f);
 
     private Transform _binPosition;
+    private ConsoleModel _consoleModel;
 
-    public void Init(Transform endPosition)
+    public void Init(Transform endPosition, ConsoleModel consoleModel)
     {
+        _consoleModel = consoleModel;
         _binPosition = endPosition;
     }
 
     public void DestroyCube(CubeView cubeView)
     {
+        _consoleModel.WriteToConsole(TypeOfText.CubeThrowing);
         cubeView.TurnOffRaycasts();
         Vector3 topPoint = _binPosition.position + new Vector3(0, 100, 0);
 
